@@ -121,8 +121,7 @@ def is_collect_boost(player_x, player_y, boost_x, boost_y):
 
 
 def its_boost_time():
-    return True
-    if random.randint(1, 10) == 1:
+    if random.randint(1, 12) == 1:
         return True
     return False
 
