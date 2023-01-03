@@ -14,7 +14,6 @@ background = pygame.image.load('background.jpg')
 mixer.music.load('background.wav')
 mixer.music.play(-1)
 
-
 # title and icon
 pygame.display.set_caption("space invaders")
 icon = pygame.image.load('001-ufo.png')
@@ -32,13 +31,14 @@ enemyX = []
 enemyY = []
 enemy_x_change = []
 enemy_y_change = []
-num_of_enemies = 6
+num_of_enemies = 12
 for _ in range(num_of_enemies):
     enemyImg.append(pygame.image.load('001-enemy.png'))
     enemyX.append(random.randint(0, 735))
     enemyY.append(50)
     enemy_x_change.append(0.35)
     enemy_y_change.append(40)
+num_of_enemies = 1
 
 # bullet
 
@@ -56,11 +56,12 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 score_x = 10
 score_y = 10
 
-
 # game over
 game_over_font = pygame.font.Font('freesansbold.ttf', 80)
+
+
 def game_over_text():
-    game_over_text = game_over_font.render("GAME OVER" , True, (250,0, 80))
+    game_over_text = game_over_font.render("GAME OVER", True, (250, 0, 80))
     screen.blit(game_over_text, (160, 250))
 
 
@@ -87,10 +88,8 @@ def player(x, y):
     screen.blit(playerImg, (x, y))
 
 
-def enemy(x, y, i):
-    screen.blit(enemyImg[i], (x, y))
-
-
+def enemy(x, y, index):
+    screen.blit(enemyImg[index], (x, y))
 
 
 # game loop
@@ -107,14 +106,11 @@ while running:
 
         # if keystroke is pressed check idf it is right of left
         if event.type == pygame.KEYDOWN:
-            print("a keystroke is pressed")
             if event.key == pygame.K_LEFT:
-                player_x_change = -0.5
+                player_x_change = -0.6
             if event.key == pygame.K_RIGHT:
-                print("Right arrow was pressed")
-                player_x_change = 0.5
+                player_x_change = 0.6
             if event.key == pygame.K_SPACE:
-                print("space was pressed")
                 if bullet_state == "ready":
                     bulletX = playerX
                     fire_bullet(bulletX, bulletY)
@@ -122,7 +118,6 @@ while running:
                     bullet_sound.play()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
-                print("keystroke has been released")
                 player_x_change = 0
 
     playerX = (playerX + player_x_change) % 800
@@ -155,14 +150,16 @@ while running:
             bulletY = 480
             bullet_state = "ready"
             score_value += 1
-            print("score is:", score_value)
             enemyX[i] = random.randint(0, 735)
             enemyY[i] = 50
-            bullet_sound = mixer.Sound('explosion.wav')
-            bullet_sound.play()
+            explosion_sound = mixer.Sound('explosion.wav')
+            explosion_sound.play()
+    if score_value >= num_of_enemies*3 and num_of_enemies < 12:
+        num_of_enemies += 1
 
     player(playerX, plyerY)
     for i in range(num_of_enemies):
         enemy(enemyX[i], enemyY[i], i)
         show_score(score_x, score_y)
     pygame.display.update()
+
